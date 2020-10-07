@@ -1,0 +1,10 @@
+{
+  "is_individual": false,
+  "notify": 3,
+  "send_mail": false,
+  "salary_registers": true,
+  "form_currency_transactions": true,
+  "is_multicurrency": true,
+  "notify_partner": false,
+  "get_all_types_acc": true
+}

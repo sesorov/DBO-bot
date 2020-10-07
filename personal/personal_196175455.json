@@ -1,0 +1,13 @@
+{
+  "is_individual": false,
+  "most_important": "price",
+  "deposits_investments_both_account": 2,
+  "is_expenses_control": true,
+  "notify": 3,
+  "send_mail": false,
+  "salary_registers": true,
+  "form_currency_transactions": true,
+  "is_multicurrency": true,
+  "notify_partner": true,
+  "get_all_types_acc": true
+}
