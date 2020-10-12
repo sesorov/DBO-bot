@@ -36,6 +36,32 @@ def calculate(chat_id):
                     if personal['is_expenses_control']:
                         if bank['is individual expenses control']:
                             bank['score'] += 1
+                    if personal['is_gpay']:
+                        if bank['gpay visa'] == 0:
+                            bank['score'] -= 1
+                        elif bank['gpay visa'] == 1:
+                            bank['score'] += 2
+                        elif bank['gpay visa'] == 2:
+                            bank['score'] += 1
+                        if bank['gpay mastercard'] == 0:
+                            bank['score'] -= 1
+                        elif bank['gpay mastercard'] == 1:
+                            bank['score'] += 2
+                        elif bank['gpay mastercard'] == 2:
+                            bank['score'] += 1
+
+                        bank['score'] += bank['gpay visa']
+                        bank['score'] += bank['gpay mastercard']
+                    if personal['is_help_phone'] in bank['help']:
+                        bank['score'] += 1
+                    if personal['is_help_email'] in bank['help']:
+                        bank['score'] += 1
+                    if personal['is_help_vk'] in bank['help']:
+                        bank['score'] += 1
+                    if personal['is_help_chat_human'] in bank['help']:
+                        bank['score'] += 1
+                    if personal['is_help_chat_bot'] in bank['help']:
+                        bank['score'] += 1
                 banks = sorted(banks, key=lambda k: k['score'], reverse=True)
                 top = [bank for bank in banks if bank['score'] == banks[0]['score']]
                 if personal['most_important'] == 'price':
@@ -46,14 +72,67 @@ def calculate(chat_id):
                     top = sorted(top, key=lambda k: k['rating markswebb'], reverse=True)
                 top = sorted(top, key=lambda k: k['rating'], reverse=True)
                 top = sorted(top, key=lambda k: k['rating markswebb'], reverse=True)
-                message = f"Исходя из ваших предпочтений и рейтинга, самые подходящие банки:\n1.{top[0]['name']}\n2.{top[1]['name']}\n3.{top[3]['name']}"
+                message = "Исходя из ваших предпочтений и рейтинга, самые подходящие банки:\n"
+                if len(top) > 3:
+                    top = top[:3]
+                index = 1
+                for bank in top:
+                    message += f"{index}. {bank['name']}\n"
+                    index += 1
                 bot.send_message(chat_id=chat_id, text=message)
 
         else:
             banks = [dict(item, score=0) for item in db_banks.get_entity()]  # adding a score value to sort
-            if not personal['is_simple']:
+            if personal['is_simple']:
                 for bank in banks:
+                    for i in range(0, 4):
+                        if personal['notify'] == i:
+                            if bank['is SMS email push'] == i:
+                                bank['score'] += 2
+                            elif bank['is SMS email push'] > i:
+                                bank['score'] += 1
+                    if personal['using_currency']:
+                        if bank['is formation currency transactions']:
+                            bank['score'] += 2
+                        if bank['multicurrency payments']:
+                            bank['score'] += 3
+                    if personal['is_help_phone'] in bank['help']:
+                        bank['score'] += 1
+                    if personal['is_help_email'] in bank['help']:
+                        bank['score'] += 1
+                    if personal['is_help_vk'] in bank['help']:
+                        bank['score'] += 1
+                    if personal['is_help_chat_human'] in bank['help']:
+                        bank['score'] += 1
+                    if personal['is_help_chat_bot'] in bank['help']:
+                        bank['score'] += 1
 
+                    # minor
+                    if bank['is mail to bank']:
+                        bank['score'] += 1
+                    if bank['is send registers for salary']:
+                        bank['score'] += 1
+                    if bank['partners notification about payments']:
+                        bank['score'] += 1
+                    if bank['all types of accounts and statements']:
+                        bank['score'] += 1
+                banks = [bank for bank in banks if (bank['max price'] if bank.get('max price') is not None else 0) < personal['max price']]
+                banks = sorted(banks, key=lambda k: k['score'], reverse=True)
+                top = [bank for bank in banks if bank['score'] == banks[0]['score']]
+                top = sorted(top, key=lambda k: k['rating'], reverse=True)
+                top = sorted(top, key=lambda k: k['rating markswebb'], reverse=True)
+
+                message = "Исходя из ваших предпочтений и рейтинга, самые подходящие банки:\n"
+                if len(top) > 3:
+                    top = top[:3]
+                index = 1
+                for bank in top:
+                    message += f"{index}. {bank['name']}\n"
+                    index += 1
+                bot.send_message(chat_id=chat_id, text=message)
+
+            else:
+                for bank in banks:
                     for i in range(0, 4):
                         if personal['notify'] == i:
                             if bank['is SMS email push'] >= i:
@@ -115,7 +194,12 @@ def calculate(chat_id):
 
                 top = sorted(top, key=lambda k: k['rating'], reverse=True)
                 top = sorted(top, key=lambda k: k['score'], reverse=True)
-                message = f"Исходя из ваших предпочтений и рейтинга, самые подходящие банки:\n1.{top[0]['name']}\n2.{top[1]['name']}\n3.{top[3]['name']}"
+
+                message = "Исходя из ваших предпочтений и рейтинга, самые подходящие банки:\n"
+                if len(top) > 3:
+                    top = top[:3]
+                index = 1
+                for bank in top:
+                    message += f"{index}. {bank['name']}\n"
+                    index += 1
                 bot.send_message(chat_id=chat_id, text=message)
-            else:  # simple
-                pass

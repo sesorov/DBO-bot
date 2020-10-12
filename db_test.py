@@ -1,5 +1,4 @@
 from database import BankDatabase
+from functions import calculate
 
-db = BankDatabase()
-print(db.get_individuals())
-print(bool(None))
+calculate(351230882)

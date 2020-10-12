@@ -11,10 +11,18 @@
         "multicurrency payments": 1,
         "partners notification about payments": 1,
         "all types of accounts and statements": 1,
-        "rating": 4.6,
+        "rating": 2,
         "min price": 490,
         "max price": 9900,
-        "price addition": "https://alfabank.ru/sme/tariffs/"
+        "price addition": "https://alfabank.ru/sme/tariffs/",
+        "rating markswebb": 59.8,
+        "help": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "name": "Банк «ВТБ»",
@@ -28,10 +36,18 @@
         "multicurrency payments": 1,
         "partners notification about payments": 0,
         "all types of accounts and statements": 1,
-        "rating": 4.7,
+        "rating": 1.8,
         "min price": 0,
         "max price": 7000,
-        "price addition": "https://www.vtb.ru/malyj-biznes/raschetnoe-obsluzhivanie/pakety-uslug/"
+        "price addition": "https://www.vtb.ru/malyj-biznes/raschetnoe-obsluzhivanie/pakety-uslug/",
+        "rating markswebb": 52.3,
+        "help": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "name": "Сбербанк России",
@@ -45,10 +61,18 @@
         "multicurrency payments": 1,
         "partners notification about payments": 1,
         "all types of accounts and statements": 1,
-        "rating": 4.7,
+        "rating": 1.5,
         "min price": 0,
         "max price": 2991,
-        "price addition": "https://www.sberbank.ru/ru/s_m_business/open-accounts?utm_source=yandex&utm_medium=cpc&utm_campaign=start_god_2020_corporate_context_search_brand_vvb_desk_yxprrko&utm_term=%D1%81%D0%B1%D0%B5%D1%80%D0%B1%D0%B0%D0%BD%D0%BA%20%D0%B4%D0%BB%D1%8F%20%D0%B8%D0%BF&utm_content=pid|18499212117|aid|8938727558|rid||cid|45813089|gid|3951258370|src|search_none&utm_id=ic|45813089|3951258370|8938727558|18499212117||search|premium&yclid=5788717381195433168"
+        "price addition": "https://www.sberbank.ru/ru/s_m_business/open-accounts?utm_source=yandex&utm_medium=cpc&utm_campaign=start_god_2020_corporate_context_search_brand_vvb_desk_yxprrko&utm_term=%D1%81%D0%B1%D0%B5%D1%80%D0%B1%D0%B0%D0%BD%D0%BA%20%D0%B4%D0%BB%D1%8F%20%D0%B8%D0%BF&utm_content=pid|18499212117|aid|8938727558|rid||cid|45813089|gid|3951258370|src|search_none&utm_id=ic|45813089|3951258370|8938727558|18499212117||search|premium&yclid=5788717381195433168",
+        "rating markswebb": 63.8,
+        "help": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "name": "Газпромбанк",
@@ -62,7 +86,13 @@
         "multicurrency payments": 1,
         "partners notification about payments": 0,
         "all types of accounts and statements": 1,
-        "rating": 3.7
+        "rating": 4,
+        "rating markswebb": 11.4,
+        "help": [
+            1,
+            2,
+            3
+        ]
     },
     {
         "name": "Россельхозбанк",
@@ -76,7 +106,16 @@
         "multicurrency payments": 1,
         "partners notification about payments": 1,
         "all types of accounts and statements": 1,
-        "rating": 1.9
+        "rating": 3.3,
+        "min price": 0,
+        "max price": 1000,
+        "price addition": "https://www.rshb.ru/smallbusiness/rko/",
+        "rating markswebb": 39.1,
+        "help": [
+            1,
+            3,
+            4
+        ]
     },
     {
         "name": "ПАО Банк «ФК Открытие»",
@@ -90,7 +129,16 @@
         "multicurrency payments": 1,
         "partners notification about payments": 0,
         "all types of accounts and statements": 1,
-        "rating": 4.7
+        "rating": 1.74,
+        "min price": 0,
+        "max price": 1990,
+        "price addition": "https://www.open.ru/small/rko?utm_source=google&utm_medium=cpc&utm_campaign=ag1_msb_rko_google_global_ninth_search_oth|cid:9106555654&utm_term=phid:kwd-378368959131&utm_content=gr:94750969129|b:445619119886|st:g|s:|p:|pt:|dt:c|geo:1011981|geo2:&gclid=Cj0KCQjw2or8BRCNARIsAC_ppyaVUFFS-mZ6BGD69YFSAXpFNpNpT_h9HS7Lp8We_M5WtL12j_8DvWIaAjgREALw_wcB",
+        "rating markswebb": 38.9,
+        "help": [
+            1,
+            3,
+            4
+        ]
     },
     {
         "name": "Росбанк",
@@ -104,7 +152,16 @@
         "multicurrency payments": 1,
         "partners notification about payments": 0,
         "all types of accounts and statements": 1,
-        "rating": 4.4
+        "rating": 3.7,
+        "min price": 590,
+        "max price": 3990,
+        "price addition": "https://www.rosbank.ru/malomu-biznesu/schyot-dlya-biznesa/tarify-rko/",
+        "rating markswebb": 28,
+        "help": [
+            1,
+            3,
+            4
+        ]
     },
     {
         "name": "ЮниКредит Банк",
@@ -118,7 +175,17 @@
         "multicurrency payments": 1,
         "partners notification about payments": 1,
         "all types of accounts and statements": 1,
-        "rating": 2.4
+        "rating": 1.3,
+        "min price": 2000,
+        "max price": 45000,
+        "price addition": "https://biz.unicredit.ru/services/how-start-business/rko/?utm_medium=cpc&utm_source=google_rko&utm_campaign=geo:reg|system:search|type:brand|adtype:text|name:rko&utm_content=gid|81288354159|aid|394698431950|gc:7925237708|gb:394698431950|gad:81288354159|gk:kwd-331455835321|gst:g|gf:|gs:|gp:|gdev:c&gclid=Cj0KCQjw2or8BRCNARIsAC_ppyZozmmeg9wcsT867_jOgiXwGITimedMSRgoWPz2PYd3t1iYBUrQwzEaAnUGEALw_wcB",
+        "rating markswebb": 27.9,
+        "help": [
+            1,
+            3,
+            4,
+            5
+        ]
     },
     {
         "name": "Райффайзенбанк",
@@ -132,7 +199,18 @@
         "multicurrency payments": 1,
         "partners notification about payments": 0,
         "all types of accounts and statements": 1,
-        "rating": 4.8
+        "rating": 4.5,
+        "min price": 0,
+        "max price": 6490,
+        "price addition": "https://www.raiffeisen.ru/promo/rko/newtariffs/a/?cm_id=8565591063_83444359901_422665188621_kwd-295667108300_c__g_&utm_source=google&utm_medium=cpc&utm_campaign=mgcom|pr:sme|sp:sme|ssp:g_rko_brand|plt:search|tg:ssa|sem:brand|cntr:russia|classic&utm_term=cid-8565591063,agi-83444359901,adi-422665188621,tid-kwd-295667108300,dev-c,reg-1011981,pview-&utm_content=%D1%80%D0%B0%D1%81%D1%87%D0%B5%D1%82%D0%BD%D0%BE%20%D0%BA%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D0%BE%D0%B5%20%D0%BE%D0%B1%D1%81%D0%BB%D1%83%D0%B6%D0%B8%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%20%D1%80%D0%B0%D0%B9%D1%84%D1%84%D0%B0%D0%B9%D0%B7%D0%B5%D0%BD%D0%B1%D0%B0%D0%BD%D0%BA,ph-kwd-295667108300,gn:rko-exact&gclid=Cj0KCQjw2or8BRCNARIsAC_ppyaxu7UwTUDUpm5bFPyHwAAkGbc6MFscetsQT3xOMDXupat89sEN1b8aAi2XEALw_wcB&utm_expid=.qD9N5RUnSuqL-QlC2iWbcA.1&utm_referrer=https%3A%2F%2Fwww.google.com%2F",
+        "rating markswebb": 60.7,
+        "help": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "name": "Совкомбанк",
@@ -146,7 +224,17 @@
         "multicurrency payments": 1,
         "partners notification about payments": 0,
         "all types of accounts and statements": 1,
-        "rating": 2.7
+        "rating": 1,
+        "min price": 190,
+        "max price": 1490,
+        "price addition": "https://sovcombank.ru/apply/rko/?yagla=&utm_source=E-com&utm_medium=PKW&utm_campaign=GoogleAdWords&utm_content=E-com_cr_brend_RKO_g_search_rf&utm_term=E-com_cr_brend_RKO_g_search_rf__%D1%80%D0%B0%D1%81%D1%87%D0%B5%D1%82%D0%BD%D0%BE%20%D0%BA%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D0%BE%D0%B5%20%D0%BE%D0%B1%D1%81%D0%BB%D1%83%D0%B6%D0%B8%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%20%D1%81%D0%BE%D0%B2%D0%BA%D0%BE%D0%BC%D0%B1%D0%B0%D0%BD%D0%BA,8997352312,413017794883,kwd-295667110940,,c,e,,g,91129219816,{addphrases}&gclid=Cj0KCQjw2or8BRCNARIsAC_ppybQVd6_L2MnJCTINLPMM4HBvCCx80d1ktNd3JG9lly1xxj_hELfQlAaAtJ9EALw_wcB",
+        "rating markswebb": 30.2,
+        "help": [
+            1,
+            2,
+            3,
+            4
+        ]
     },
     {
         "name": "Банк «Россия»",
@@ -160,9 +248,15 @@
         "multicurrency payments": 0,
         "partners notification about payments": 0,
         "all types of accounts and statements": 1,
-        "rating": 2.2,
+        "rating": 1.7,
         "min price": 0,
-        "max price": 6500
+        "max price": 6500,
+        "rating markswebb": 20.3,
+        "help": [
+            1,
+            2,
+            3
+        ]
     },
     {
         "name": "Всероссийский Банк Развития Регионов",
@@ -176,7 +270,13 @@
         "multicurrency payments": 1,
         "partners notification about payments": 0,
         "all types of accounts and statements": 0,
-        "rating": 2.7
+        "rating": 2,
+        "min price": 0,
+        "rating markswebb": 18.6,
+        "help": [
+            1,
+            2
+        ]
     },
     {
         "name": "Тинькофф Банк",
@@ -190,7 +290,18 @@
         "multicurrency payments": 1,
         "partners notification about payments": 0,
         "all types of accounts and statements": 1,
-        "rating": 4.8
+        "rating": 4.6,
+        "min price": 490,
+        "max price": 4990,
+        "price addition": "https://www.tinkoff.ru/business/account/",
+        "rating markswebb": 90.5,
+        "help": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "name": "Банк «Санкт-Петербург»",
@@ -204,7 +315,16 @@
         "multicurrency payments": 1,
         "partners notification about payments": 1,
         "all types of accounts and statements": 1,
-        "rating": 4.3
+        "rating": 4.7,
+        "min price": 490,
+        "max price": 3000,
+        "price addition": "https://www.bspb.ru/business/settlement-service/#tariff",
+        "rating markswebb": 36.4,
+        "help": [
+            1,
+            2,
+            3
+        ]
     },
     {
         "name": "Ситибанк",
@@ -218,7 +338,12 @@
         "multicurrency payments": 1,
         "partners notification about payments": 1,
         "all types of accounts and statements": 1,
-        "rating": 2.5
+        "rating": 1.95,
+        "rating markswebb": 32.1,
+        "help": [
+            1,
+            3
+        ]
     },
     {
         "name": "Новикомбанк",
@@ -232,7 +357,12 @@
         "multicurrency payments": 1,
         "partners notification about payments": 1,
         "all types of accounts and statements": 1,
-        "rating": 3.8
+        "rating": 2.74,
+        "rating markswebb": 22.2,
+        "help": [
+            1,
+            5
+        ]
     },
     {
         "name": "Почта Банк",
@@ -246,9 +376,15 @@
         "multicurrency payments": 0,
         "partners notification about payments": 0,
         "all types of accounts and statements": 0,
-        "rating": 3.2,
+        "rating": 3.6,
         "min price": 900,
-        "max price": 2900
+        "max price": 2900,
+        "rating markswebb": 46.8,
+        "help": [
+            1,
+            3,
+            4
+        ]
     },
     {
         "name": "Банк «АК Барс»",
@@ -262,7 +398,18 @@
         "multicurrency payments": 1,
         "partners notification about payments": 0,
         "all types of accounts and statements": 1,
-        "rating": 2.5
+        "rating": 1.54,
+        "min price": 0,
+        "max price": 9900,
+        "price addition": "https://go.akbars.ru/business-arsenal?utm_cta=2&utm_source=google&utm_medium=cpc_poisk&utm_campaign=paket_rko_july_2020_arsenal&utm_content=10894810999_465816705791&utm_term=GEO_%D1%80%D0%B0%D1%81%D1%87%D0%B5%D1%82%D0%BD%D1%8B%D0%B9%20%D1%81%D1%87%D0%B5%D1%82%20%D0%B0%D0%BA%20%D0%B1%D0%B0%D1%80%D1%81&gclid=Cj0KCQjw2or8BRCNARIsAC_ppyb22DMZd5Xl64Tc-FVWBFQE5iuwWoONkzCIFw3dqc5Llc5gAoV37JQaAkVlEALw_wcB",
+        "rating markswebb": 66.5,
+        "help": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "name": "Банк «Уралсиб»",
@@ -276,7 +423,17 @@
         "multicurrency payments": 0,
         "partners notification about payments": 0,
         "all types of accounts and statements": 1,
-        "rating": 3.1
+        "rating": 2.06,
+        "min price": 1200,
+        "max price": 2800,
+        "price addition": "https://www.uralsib.ru/prm/rko_osen?utm_source=google&utm_medium=cpc&utm_campaign=ga-rko-competitors-rko_and_account-desktop-mln-search&utm_term=%D1%82%D0%B0%D1%80%D0%B8%D1%84%D1%8B%20%D1%80%D0%B0%D1%81%D1%87%D0%B5%D1%82%D0%BD%D0%BE%20%D0%BA%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D0%BE%D0%B3%D0%BE%20%D0%BE%D0%B1%D1%81%D0%BB%D1%83%D0%B6%D0%B8%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F%20%D0%B3%D0%B0%D0%B7%D0%BF%D1%80%D0%BE%D0%BC%D0%B1%D0%B0%D0%BD%D0%BA&utm_content=campaignid-10368130681|creative-444000742514|targetid-kwd-931927211203|adgroupid-105651285760|adposition-|network-g|placement-|target-|feeditemid-|matchtype-e|device-c|adwords_producttargetid-|loc_physical_ms-1011981|loc_interest_ms-|devicemodel-&gclid=Cj0KCQjw2or8BRCNARIsAC_ppyaIuVU9N-pCEXKmyUbibOIi1omSSEzjB-lowA08tVkEo-LFlbjKA44aAp11EALw_wcB",
+        "rating markswebb": 36.5,
+        "help": [
+            1,
+            3,
+            4,
+            5
+        ]
     },
     {
         "name": "СМП Банк",
@@ -290,6 +447,13 @@
         "multicurrency payments": 0,
         "partners notification about payments": 0,
         "all types of accounts and statements": 1,
-        "rating": 2.0
+        "rating": 3,
+        "rating markswebb": 55.8,
+        "help": [
+            1,
+            2,
+            3,
+            4
+        ]
     }
 ]

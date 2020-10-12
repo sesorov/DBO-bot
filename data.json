@@ -299,7 +299,10 @@
         "name": "Всероссийский Банк Развития Регионов",
         "license": 3287,
         "website": "https://www.vbrr.ru/",
-        "help": 1.2,
+        "help": [
+            1,
+            2
+        ],
         "is account operations": 1,
         "is possible order": 1,
         "is credit info": 1,
@@ -370,7 +373,10 @@
         "name": "Ситибанк",
         "license": 2557,
         "website": "https://www.citibank.ru/",
-        "help": 1.3,
+        "help": [
+            1,
+            3
+        ],
         "is account operations": 1,
         "is possible order": 1,
         "is credit info": 1,
@@ -391,7 +397,10 @@
         "name": "Новикомбанк",
         "license": 2546,
         "website": "https://novikom.ru/",
-        "help": 1.5,
+        "help": [
+            1,
+            5
+        ],
         "is account operations": 1,
         "is possible order": 1,
         "is credit info": 1,
