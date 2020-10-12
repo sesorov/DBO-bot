@@ -4,13 +4,15 @@ import json
 from telegram import Bot, Update, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardRemove
 from setup import TOKEN, PROXY
 from functions import calculate
-
-import commands as cmd
 from database import BankDatabase
+
+CALLBACK_BUTTON_SIMPLE = "callback_dbo_simple"
+CALLBACK_BUTTON_STANDARD = "callback_dbo_standard"
 
 CALLBACK_BUTTON_INDIVIDUAL = "callback_individual"
 CALLBACK_BUTTON_ENTITY = "callback_entity"
 
+# individuals
 CALLBACK_BUTTON_PRICE = "callback_primary_price"
 CALLBACK_BUTTON_RELIABILITY = "callback_reliability"
 CALLBACK_BUTTON_CONVENIENCE = "callback_convenience"
@@ -20,7 +22,20 @@ CALLBACK_BUTTON_DEPOSITS_INVESTMENTS = "callback_deposits_and_investments"
 CALLBACK_BUTTON_ONLY_ACCOUNT = "callback_only_account"
 CALLBACK_BUTTON_EXPENSES_CONTROL_YES = "callback_expense_yes"
 CALLBACK_BUTTON_EXPENSES_CONTROL_NO = "callback_expense_no"
+CALLBACK_BUTTON_GPAY_YES = "callback_gpay_yes"
+CALLBACK_BUTTON_GPAY_NO = "callback_gpay_yes"
+CALLBACK_BUTTON_VISA = "callback_visa"
+CALLBACK_BUTTON_MASTERCARD = "callback_mastercard"
+CALLBACK_BUTTON_VISA_MASTERCARD = "callback_visa_mastercard"
+CALLBACK_BUTTON_NO_VISA_MC = "callback_no_visa_mastercard"
+CALLBACK_BUTTON_HELP_PHONE = "callback_help_phone"
+CALLBACK_BUTTON_HELP_EMAIL = "callback_help_email"
+CALLBACK_BUTTON_HELP_VK = "callback_help_social_networks"
+CALLBACK_BUTTON_HELP_CHAT_HUMAN = "callback_help_chat_human"
+CALLBACK_BUTTON_HELP_CHAT_BOT = "callback_help_chat_bot"
+CALLBACK_BUTTON_HELP_NEXT = "callback_help_next"
 
+# entities
 CALLBACK_BUTTON_NOTIFY_SMS = "callback_notify_sms"
 CALLBACK_BUTTON_NOTIFY_SMS_EMAIL = "callback_notify_sms_email"
 CALLBACK_BUTTON_NOTIFY_ALL = "callback_notify_all"
@@ -47,6 +62,19 @@ db_banks = BankDatabase()
 
 
 class InlineKeyboardFactory:
+
+    @staticmethod
+    def get_dbo_mode_keyboard() -> InlineKeyboardMarkup:
+        keyboard = [
+            [
+                InlineKeyboardButton("Упрощённый", callback_data=CALLBACK_BUTTON_SIMPLE)
+            ],
+            [
+                InlineKeyboardButton("Стандартный", callback_data=CALLBACK_BUTTON_STANDARD)
+            ]
+        ]
+        return InlineKeyboardMarkup(keyboard)
+
     @staticmethod
     def get_individual_entity_keyboard() -> InlineKeyboardMarkup:
         """Get custom inline keyboard for choosing individual or entity bank db"""
@@ -199,6 +227,64 @@ class InlineKeyboardFactory:
         ]
         return InlineKeyboardMarkup(keyboard)
 
+    @staticmethod
+    def get_gpay_keyboard():
+        keyboard = [
+            [
+                InlineKeyboardButton("Да", callback_data=CALLBACK_BUTTON_GPAY_YES)
+            ],
+            [
+                InlineKeyboardButton("Нет", callback_data=CALLBACK_BUTTON_GPAY_NO)
+            ]
+        ]
+        return InlineKeyboardMarkup(keyboard)
+
+    @staticmethod
+    def get_visa_mc_keyboard():
+        keyboard = [
+            [
+                InlineKeyboardButton("VISA", callback_data=CALLBACK_BUTTON_VISA)
+            ],
+            [
+                InlineKeyboardButton("MasterCard", callback_data=CALLBACK_BUTTON_MASTERCARD)
+            ],
+            [
+                InlineKeyboardButton("Обе", callback_data=CALLBACK_BUTTON_VISA_MASTERCARD)
+            ],
+            [
+                InlineKeyboardButton("Другая платёжная система (напр. МИР)", callback_data=CALLBACK_BUTTON_NO_VISA_MC)
+            ]
+        ]
+        return InlineKeyboardMarkup(keyboard)
+
+    @staticmethod
+    def get_help_keyboard(is_phone=False, is_email=False, is_vk=False, is_chat_h=False, is_chat_bot=False):
+        keyboard = [
+            [
+                InlineKeyboardButton(f"Телефон {'✔️' if is_phone else '❌'}", callback_data=CALLBACK_BUTTON_HELP_PHONE)
+                # ✅
+            ],
+            [
+                InlineKeyboardButton(f"e-mail {'✔️' if is_email else '❌'}", callback_data=CALLBACK_BUTTON_HELP_EMAIL)
+            ],
+            [
+                InlineKeyboardButton(f"Социальные сети {'✔️' if is_vk else '❌'}",
+                                     callback_data=CALLBACK_BUTTON_HELP_VK)
+            ],
+            [
+                InlineKeyboardButton(f"Чат с оператором {'✔️' if is_chat_h else '❌'}",
+                                     callback_data=CALLBACK_BUTTON_HELP_CHAT_HUMAN)
+            ],
+            [
+                InlineKeyboardButton(f"Чат-бот {'✔️' if is_chat_bot else '❌'}",
+                                     callback_data=CALLBACK_BUTTON_HELP_CHAT_BOT)
+            ],
+            [
+                InlineKeyboardButton(f"Я выбрал нужные варианты ->", callback_data=CALLBACK_BUTTON_HELP_NEXT)
+            ]
+        ]
+        return InlineKeyboardMarkup(keyboard)
+
 
 class InlineCallback:
 
@@ -208,7 +294,7 @@ class InlineCallback:
             with open(file, "r") as handle:
                 data = json.load(handle)
             data.update(add_data)
-        except FileNotFoundError:
+        except OSError:
             data = add_data
         with open(file, "w") as handle:
             json.dump(data, handle, ensure_ascii=False, indent=2)
@@ -220,11 +306,37 @@ class InlineCallback:
         data = query.data  # callback_data of pushed button
         chat_id = update.effective_message.chat_id  # chat id for sending messages
         banks_individuals = db_banks.get_individuals()
+        try:
+            with open(f"personal/personal_{chat_id}.json", mode='r') as handle:
+                if json.load(handle).get("is_simple"):
+                    is_simple = True
+                else:
+                    is_simple = False
+        except OSError:
+            pass
 
-        if data == CALLBACK_BUTTON_INDIVIDUAL:
+        if data == CALLBACK_BUTTON_SIMPLE:
             bot.send_message(chat_id=update.effective_message.chat_id,
-                             text="Что для Вас важнее всего?",
-                             reply_markup=InlineKeyboardFactory.get_preferences_keyboard())
+                             text="Давайте определимся с вашим статусом. Вы:",
+                             reply_markup=InlineKeyboardFactory.get_individual_entity_keyboard())
+            InlineCallback.update_data({"is_simple": True}, f"personal/personal_{chat_id}.json")
+            return CALLBACK_BUTTON_SIMPLE
+
+        elif data == CALLBACK_BUTTON_STANDARD:
+            bot.send_message(chat_id=update.effective_message.chat_id,
+                             text="Давайте определимся с вашим статусом. Вы:",
+                             reply_markup=InlineKeyboardFactory.get_individual_entity_keyboard())
+            InlineCallback.update_data({"is_simple": False}, f"personal/personal_{chat_id}.json")
+            return CALLBACK_BUTTON_STANDARD
+
+        elif data == CALLBACK_BUTTON_INDIVIDUAL:
+            with open(f"personal/personal_{chat_id}.json") as handle:
+                if json.load(handle)['is_simple']:
+                    bot.send_message(chat_id=update.effective_message.chat_id,
+                                     text="Что для Вас важнее всего?",
+                                     reply_markup=InlineKeyboardFactory.get_preferences_keyboard())
+                else:
+                    pass
             InlineCallback.update_data({"is_individual": True}, f"personal/personal_{chat_id}.json")
             return CALLBACK_BUTTON_INDIVIDUAL
 
@@ -285,12 +397,103 @@ class InlineCallback:
             return CALLBACK_BUTTON_ONLY_ACCOUNT
 
         elif data == CALLBACK_BUTTON_EXPENSES_CONTROL_YES:
+            bot.send_message(chat_id=chat_id, text=f"Вы используете Google Pay?",
+                             parse_mode=telegram.ParseMode.HTML,
+                             reply_markup=InlineKeyboardFactory.get_gpay_keyboard())
             InlineCallback.update_data({"is_expenses_control": True}, f"personal/personal_{chat_id}.json")
             return CALLBACK_BUTTON_EXPENSES_CONTROL_YES
 
         elif data == CALLBACK_BUTTON_EXPENSES_CONTROL_NO:
+            bot.send_message(chat_id=chat_id, text=f"Вы используете Google Pay?",
+                             parse_mode=telegram.ParseMode.HTML,
+                             reply_markup=InlineKeyboardFactory.get_gpay_keyboard())
             InlineCallback.update_data({"is_expenses_control": False}, f"personal/personal_{chat_id}.json")
             return CALLBACK_BUTTON_EXPENSES_CONTROL_NO
+
+        elif data == CALLBACK_BUTTON_GPAY_YES:
+            InlineCallback.update_data({"is_gpay": True}, f"personal/personal_{chat_id}.json")
+            if is_simple:
+                msg = bot.send_message(chat_id=chat_id, text=f"Какой способ связи с банком вы предпочитаете?",
+                                       parse_mode=telegram.ParseMode.HTML,
+                                       reply_markup=InlineKeyboardFactory.get_help_keyboard())
+                InlineCallback.update_data({"is_help_phone": False}, f"personal/personal_{chat_id}.json")
+                InlineCallback.update_data({"is_help_email": False}, f"personal/personal_{chat_id}.json")
+                InlineCallback.update_data({"is_help_vk": False}, f"personal/personal_{chat_id}.json")
+                InlineCallback.update_data({"is_help_chat_human": False}, f"personal/personal_{chat_id}.json")
+                InlineCallback.update_data({"is_help_chat_bot": False}, f"personal/personal_{chat_id}.json")
+                InlineCallback.update_data({"msg_id": msg.message_id}, f"personal/personal_{chat_id}.json")
+            else:
+                bot.send_message(chat_id=chat_id, text=f"Вы используете VISA или Mastercard?",
+                                 parse_mode=telegram.ParseMode.HTML,
+                                 reply_markup=InlineKeyboardFactory.get_visa_mc_keyboard())
+            return CALLBACK_BUTTON_GPAY_YES
+
+        elif data == CALLBACK_BUTTON_GPAY_NO:
+            InlineCallback.update_data({"is_gpay": False}, f"personal/personal_{chat_id}.json")
+            if is_simple:
+                msg = bot.send_message(chat_id=chat_id, text=f"Какой способ связи с банком вы предпочитаете?",
+                                       parse_mode=telegram.ParseMode.HTML,
+                                       reply_markup=InlineKeyboardFactory.get_help_keyboard())
+                InlineCallback.update_data({"is_help_phone": False}, f"personal/personal_{chat_id}.json")
+                InlineCallback.update_data({"is_help_email": False}, f"personal/personal_{chat_id}.json")
+                InlineCallback.update_data({"is_help_vk": False}, f"personal/personal_{chat_id}.json")
+                InlineCallback.update_data({"is_help_chat_human": False}, f"personal/personal_{chat_id}.json")
+                InlineCallback.update_data({"is_help_chat_bot": False}, f"personal/personal_{chat_id}.json")
+                InlineCallback.update_data({"msg_id": msg.message_id}, f"personal/personal_{chat_id}.json")
+
+            else:
+                msg = bot.send_message(chat_id=chat_id, text=f"Вы используете VISA или Mastercard?",
+                                       parse_mode=telegram.ParseMode.HTML,
+                                       reply_markup=InlineKeyboardFactory.get_visa_mc_keyboard())
+                InlineCallback.update_data({"msg_id": msg.message_id}, f"personal/personal_{chat_id}.json")
+            return CALLBACK_BUTTON_GPAY_NO
+
+        elif data == CALLBACK_BUTTON_HELP_PHONE or data == CALLBACK_BUTTON_HELP_EMAIL \
+                or data == CALLBACK_BUTTON_HELP_VK or data == CALLBACK_BUTTON_HELP_CHAT_HUMAN or data == CALLBACK_BUTTON_HELP_CHAT_BOT:
+            with open(f"personal/personal_{chat_id}.json", mode='r') as handle:
+                personal = json.load(handle)
+                if data == CALLBACK_BUTTON_HELP_PHONE:
+                    if not personal['is_help_phone']:
+                        InlineCallback.update_data({"is_help_phone": True}, f"personal/personal_{chat_id}.json")
+                    else:
+                        InlineCallback.update_data({"is_help_phone": False}, f"personal/personal_{chat_id}.json")
+                elif data == CALLBACK_BUTTON_HELP_EMAIL:
+                    if not personal['is_help_email']:
+                        InlineCallback.update_data({"is_help_email": True}, f"personal/personal_{chat_id}.json")
+                    else:
+                        InlineCallback.update_data({"is_help_email": False}, f"personal/personal_{chat_id}.json")
+                elif data == CALLBACK_BUTTON_HELP_VK:
+                    if not personal['is_help_vk']:
+                        InlineCallback.update_data({"is_help_vk": True}, f"personal/personal_{chat_id}.json")
+                    else:
+                        InlineCallback.update_data({"is_help_vk": False}, f"personal/personal_{chat_id}.json")
+                elif data == CALLBACK_BUTTON_HELP_CHAT_HUMAN:
+                    if not personal['is_help_chat_human']:
+                        InlineCallback.update_data({"is_help_chat_human": True}, f"personal/personal_{chat_id}.json")
+                    else:
+                        InlineCallback.update_data({"is_help_chat_human": False}, f"personal/personal_{chat_id}.json")
+                elif data == CALLBACK_BUTTON_HELP_CHAT_BOT:
+                    if not personal['is_help_chat_bot']:
+                        InlineCallback.update_data({"is_help_chat_bot": True}, f"personal/personal_{chat_id}.json")
+                    else:
+                        InlineCallback.update_data({"is_help_chat_bot": False}, f"personal/personal_{chat_id}.json")
+            with open(f"personal/personal_{chat_id}.json", mode='r') as handle:
+                personal = json.load(handle)
+                tmp = bot.send_message(text=f"Какой способ связи с банком вы предпочитаете?", chat_id=chat_id,
+                                       reply_markup=InlineKeyboardFactory.get_help_keyboard(
+                                           is_phone=personal['is_help_phone'],
+                                           is_email=personal['is_help_email'],
+                                           is_vk=personal['is_help_vk'],
+                                           is_chat_h=personal['is_help_chat_human'],
+                                           is_chat_bot=personal['is_help_chat_bot']))
+                bot.delete_message(chat_id=chat_id, message_id=tmp.message_id - 1)
+
+        elif data == CALLBACK_BUTTON_HELP_NEXT:
+            bot.send_message(chat_id=chat_id, text=f"Спасибо за уделённое время, подводим итог...")
+            calculate(chat_id=chat_id)
+            return CALLBACK_BUTTON_HELP_NEXT
+
+
 
         # Only entity
 

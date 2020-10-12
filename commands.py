@@ -32,5 +32,5 @@ def command_closest_bank(update: Update, context: CallbackContext):
 
 def command_dbo_main(update: Update, context: CallbackContext):
     bot.send_message(chat_id=update.effective_message.chat_id,
-                     text="Давайте определимся с вашим статусом. Вы:",
-                     reply_markup=InlineKeyboardFactory.get_individual_entity_keyboard())
+                     text="Выберите режим подбора ДБО:",
+                     reply_markup=InlineKeyboardFactory.get_dbo_mode_keyboard())
