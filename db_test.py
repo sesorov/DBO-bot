@@ -1,4 +1,6 @@
 from database import BankDatabase
-from functions import calculate, graph_price, graph_rating
+from commands import command_dbo_main
+from functions import calculate, graph_price, graph_rating, generate_report
 
-graph_rating(is_individual=False)
+#graph_price()
+generate_report(0, is_individual=False)

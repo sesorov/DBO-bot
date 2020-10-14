@@ -87,6 +87,9 @@
         "partners notification about payments": 0,
         "all types of accounts and statements": 1,
         "rating": 4,
+        "min price": 550,
+        "max price": 9990,
+        "price addition": "https://www.gazprombank.ru/documents_and_tariffs/?fs=1002#122",
         "rating markswebb": 11.4,
         "help": [
             1,
@@ -251,6 +254,7 @@
         "rating": 1.7,
         "min price": 0,
         "max price": 6500,
+        "price addition": "https://abr.ru/corp/services/",
         "rating markswebb": 20.3,
         "help": [
             1,
@@ -272,6 +276,8 @@
         "all types of accounts and statements": 0,
         "rating": 2,
         "min price": 0,
+        "max price": 0,
+        "price addition": "https://www.vbrr.ru/corporate/settlements/tariffs/",
         "rating markswebb": 18.6,
         "help": [
             1,
@@ -339,6 +345,9 @@
         "partners notification about payments": 1,
         "all types of accounts and statements": 1,
         "rating": 1.95,
+        "min price": 0,
+        "max price": 0,
+        "price addition": "https://www.citibank.ru/russia/corporate/rus/cash_management.htm",
         "rating markswebb": 32.1,
         "help": [
             1,
@@ -358,6 +367,9 @@
         "partners notification about payments": 1,
         "all types of accounts and statements": 1,
         "rating": 2.74,
+        "min price": 0,
+        "max price": 1500,
+        "price addition": "https://novikom.ru/corporates/tarify_corp/",
         "rating markswebb": 22.2,
         "help": [
             1,
@@ -379,6 +391,7 @@
         "rating": 3.6,
         "min price": 900,
         "max price": 2900,
+        "price addition": "https://www.pochtabank.ru/upload/images/documents/rko/tariffs_rko_16-04-2020.pdf",
         "rating markswebb": 46.8,
         "help": [
             1,
@@ -448,6 +461,9 @@
         "partners notification about payments": 0,
         "all types of accounts and statements": 1,
         "rating": 3,
+        "min price": 0,
+        "max price": 0,
+        "price addition": "https://old.smpbank.ru/ru/msb/tariffs/",
         "rating markswebb": 55.8,
         "help": [
             1,

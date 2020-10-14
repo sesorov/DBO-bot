@@ -4,6 +4,7 @@ from telegram import Update, ParseMode, Bot, ChatAction, ReplyKeyboardMarkup, Re
 from telegram.ext import CallbackContext
 from setup import TOKEN
 from database import BankDatabase
+from functions import  graph_price, graph_rating, graph_rating_markswebb
 
 from inline_handler import InlineKeyboardFactory
 

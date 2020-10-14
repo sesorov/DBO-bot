@@ -38,10 +38,15 @@ CALLBACK_BUTTON_HELP_CHAT_HUMAN = "callback_help_chat_human"
 CALLBACK_BUTTON_HELP_CHAT_BOT = "callback_help_chat_bot"
 CALLBACK_BUTTON_HELP_NEXT = "callback_help_next"
 
-CALLBACK_BUTTON_INDIVIDUAL_50 = "callback_individual_50"
-CALLBACK_BUTTON_INDIVIDUAL_100 = "callback_individual_100"
-CALLBACK_BUTTON_INDIVIDUAL_1000 = "callback_individual_1000"
+CALLBACK_BUTTON_INDIVIDUAL_0_50 = "callback_individual_0_50"
+CALLBACK_BUTTON_INDIVIDUAL_0_150 = "callback_individual_0_150"
+CALLBACK_BUTTON_INDIVIDUAL_150_2000 = "callback_individual_150_2000"
+CALLBACK_BUTTON_INDIVIDUAL_2000_10000 = "callback_individual_2000_10000"
+CALLBACK_BUTTON_INDIVIDUAL_10000_MORE = "callback_individual_10000_more"
 CALLBACK_BUTTON_INDIVIDUAL_ANY_COST = "callback_individual_any_cost"
+
+CALLBACK_BUTTON_SMS_BANK_YES = "callback_sms_bank_yes"
+CALLBACK_BUTTON_SMS_BANK_NO = "callback_sms_bank_no"
 
 # entities
 CALLBACK_BUTTON_NOTIFY_SMS = "callback_notify_sms"
@@ -353,16 +358,34 @@ class InlineKeyboardFactory:
     def get_standard_individual_price_keyboard():
         keyboard = [
             [
-                InlineKeyboardButton("До 50 руб в месяц", callback_data=CALLBACK_BUTTON_INDIVIDUAL_50)
+                InlineKeyboardButton("Бесплатная | До 50 р/мес", callback_data=CALLBACK_BUTTON_INDIVIDUAL_0_50)
             ],
             [
-                InlineKeyboardButton("До 100 руб в месяц", callback_data=CALLBACK_BUTTON_INDIVIDUAL_100)
+                InlineKeyboardButton("От 0 до 150 р/мес", callback_data=CALLBACK_BUTTON_INDIVIDUAL_0_150)
             ],
             [
-                InlineKeyboardButton("До 1000 руб в месяц", callback_data=CALLBACK_BUTTON_INDIVIDUAL_1000)
+                InlineKeyboardButton("От 150 до 2000 р/мес", callback_data=CALLBACK_BUTTON_INDIVIDUAL_150_2000)
             ],
             [
-                InlineKeyboardButton("Любая", callback_data=CALLBACK_BUTTON_INDIVIDUAL_ANY_COST)
+                InlineKeyboardButton("От 2000 до 10000 р/мес", callback_data=CALLBACK_BUTTON_INDIVIDUAL_2000_10000)
+            ],
+            [
+                InlineKeyboardButton("От 10000 р/мес (Премиум)", callback_data=CALLBACK_BUTTON_INDIVIDUAL_10000_MORE)
+            ],
+            [
+                InlineKeyboardButton("Не важна / учитывать любую", callback_data=CALLBACK_BUTTON_INDIVIDUAL_ANY_COST)
+            ]
+        ]
+        return InlineKeyboardMarkup(keyboard)
+
+    @staticmethod
+    def get_sms_banking_keyboard():
+        keyboard = [
+            [
+                InlineKeyboardButton("Да", callback_data=CALLBACK_BUTTON_SMS_BANK_YES)
+            ],
+            [
+                InlineKeyboardButton("Нет", callback_data=CALLBACK_BUTTON_SMS_BANK_NO)
             ]
         ]
         return InlineKeyboardMarkup(keyboard)
@@ -615,8 +638,15 @@ class InlineCallback:
 
         elif data == CALLBACK_BUTTON_HELP_NEXT:
             if is_simple:
-                bot.send_message(chat_id=chat_id, text=f"Спасибо за уделённое время, подводим итог...")
-                calculate(chat_id=chat_id)
+                with open(f"personal/personal_{chat_id}.json", mode='r') as handle:
+                    personal = json.load(handle)
+                    if personal['is_individual']:
+                        bot.send_message(chat_id=chat_id, text=f"Желаете учитывать стоимость СМС-банкинга?",
+                                         parse_mode=telegram.ParseMode.HTML,
+                                         reply_markup=InlineKeyboardFactory.get_sms_banking_keyboard())
+                    else:
+                        bot.send_message(chat_id=chat_id, text=f"Спасибо за уделённое время, подводим итог...")
+                        calculate(chat_id=chat_id)
             else:
                 with open(f"personal/personal_{chat_id}.json", mode='r') as handle:
                     personal = json.load(handle)
@@ -629,29 +659,65 @@ class InlineCallback:
                         calculate(chat_id=chat_id)
             return CALLBACK_BUTTON_HELP_NEXT
 
-        elif data == CALLBACK_BUTTON_INDIVIDUAL_50:
+        elif data == CALLBACK_BUTTON_INDIVIDUAL_0_50:
+            InlineCallback.update_data({"min price": 0}, f"personal/personal_{chat_id}.json")
             InlineCallback.update_data({"max price": 50}, f"personal/personal_{chat_id}.json")
-            bot.send_message(chat_id=chat_id, text=f"Спасибо за уделённое время, подводим итог...")
-            calculate(chat_id=chat_id)
-            return CALLBACK_BUTTON_INDIVIDUAL_50
+            bot.send_message(chat_id=chat_id, text=f"Желаете учитывать стоимость СМС-банкинга?",
+                             parse_mode=telegram.ParseMode.HTML,
+                             reply_markup=InlineKeyboardFactory.get_sms_banking_keyboard())
+            return CALLBACK_BUTTON_INDIVIDUAL_0_50
 
-        elif data == CALLBACK_BUTTON_INDIVIDUAL_100:
-            InlineCallback.update_data({"max price": 100}, f"personal/personal_{chat_id}.json")
-            bot.send_message(chat_id=chat_id, text=f"Спасибо за уделённое время, подводим итог...")
-            calculate(chat_id=chat_id)
-            return CALLBACK_BUTTON_INDIVIDUAL_100
+        elif data == CALLBACK_BUTTON_INDIVIDUAL_0_150:
+            InlineCallback.update_data({"min price": 0}, f"personal/personal_{chat_id}.json")
+            InlineCallback.update_data({"max price": 150}, f"personal/personal_{chat_id}.json")
+            bot.send_message(chat_id=chat_id, text=f"Желаете учитывать стоимость СМС-банкинга?",
+                             parse_mode=telegram.ParseMode.HTML,
+                             reply_markup=InlineKeyboardFactory.get_sms_banking_keyboard())
+            return CALLBACK_BUTTON_INDIVIDUAL_0_150
 
-        elif data == CALLBACK_BUTTON_INDIVIDUAL_1000:
-            InlineCallback.update_data({"max price": 1000}, f"personal/personal_{chat_id}.json")
-            bot.send_message(chat_id=chat_id, text=f"Спасибо за уделённое время, подводим итог...")
-            calculate(chat_id=chat_id)
-            return CALLBACK_BUTTON_INDIVIDUAL_1000
+        elif data == CALLBACK_BUTTON_INDIVIDUAL_150_2000:
+            InlineCallback.update_data({"min price": 150}, f"personal/personal_{chat_id}.json")
+            InlineCallback.update_data({"max price": 2000}, f"personal/personal_{chat_id}.json")
+            bot.send_message(chat_id=chat_id, text=f"Желаете учитывать стоимость СМС-банкинга?",
+                             parse_mode=telegram.ParseMode.HTML,
+                             reply_markup=InlineKeyboardFactory.get_sms_banking_keyboard())
+            return CALLBACK_BUTTON_INDIVIDUAL_150_2000
+
+        elif data == CALLBACK_BUTTON_INDIVIDUAL_2000_10000:
+            InlineCallback.update_data({"min price": 2000}, f"personal/personal_{chat_id}.json")
+            InlineCallback.update_data({"max price": 10000}, f"personal/personal_{chat_id}.json")
+            bot.send_message(chat_id=chat_id, text=f"Желаете учитывать стоимость СМС-банкинга?",
+                             parse_mode=telegram.ParseMode.HTML,
+                             reply_markup=InlineKeyboardFactory.get_sms_banking_keyboard())
+            return CALLBACK_BUTTON_INDIVIDUAL_2000_10000
+
+        elif data == CALLBACK_BUTTON_INDIVIDUAL_10000_MORE:
+            InlineCallback.update_data({"min price": 10000}, f"personal/personal_{chat_id}.json")
+            InlineCallback.update_data({"max price": 999999999}, f"personal/personal_{chat_id}.json")
+            bot.send_message(chat_id=chat_id, text=f"Желаете учитывать стоимость СМС-банкинга?",
+                             parse_mode=telegram.ParseMode.HTML,
+                             reply_markup=InlineKeyboardFactory.get_sms_banking_keyboard())
+            return CALLBACK_BUTTON_INDIVIDUAL_10000_MORE
 
         elif data == CALLBACK_BUTTON_INDIVIDUAL_ANY_COST:
+            InlineCallback.update_data({"min price": 0}, f"personal/personal_{chat_id}.json")
             InlineCallback.update_data({"max price": 999999999}, f"personal/personal_{chat_id}.json")
+            bot.send_message(chat_id=chat_id, text=f"Желаете учитывать стоимость СМС-банкинга?",
+                             parse_mode=telegram.ParseMode.HTML,
+                             reply_markup=InlineKeyboardFactory.get_sms_banking_keyboard())
+            return CALLBACK_BUTTON_INDIVIDUAL_ANY_COST
+
+        elif data == CALLBACK_BUTTON_SMS_BANK_YES:
+            InlineCallback.update_data({"sms": True}, f"personal/personal_{chat_id}.json")
             bot.send_message(chat_id=chat_id, text=f"Спасибо за уделённое время, подводим итог...")
             calculate(chat_id=chat_id)
-            return CALLBACK_BUTTON_INDIVIDUAL_ANY_COST
+            return CALLBACK_BUTTON_SMS_BANK_YES
+
+        elif data == CALLBACK_BUTTON_SMS_BANK_NO:
+            InlineCallback.update_data({"sms": False}, f"personal/personal_{chat_id}.json")
+            bot.send_message(chat_id=chat_id, text=f"Спасибо за уделённое время, подводим итог...")
+            calculate(chat_id=chat_id)
+            return CALLBACK_BUTTON_SMS_BANK_NO
 
         # Only entity
 
