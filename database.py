@@ -21,3 +21,6 @@ class BankDatabase:
 
     def get_entity(self) -> list:
         return list(self.banks['entities'].find())
+
+    def get_safety(self) -> list:
+        return list(self.banks['safety'].find())

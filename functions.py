@@ -32,12 +32,26 @@ def extract_price(source, is_min):
     except KeyError:
         return 0
 
+def generate_personal_top(is_individual: bool, top: list):
+    c = canvas.Canvas(f"analytics_all.pdf", pagesize=A4)
+    pdfmetrics.registerFont(TTFont('FreeSans', 'fonts/FreeSans.ttf'))
+    c.setFont(psfontname='FreeSans', size=18)
+    c.drawCentredString(300, 800, "Отчёт по наиболее подходящим банкам")
+    for bank in top:
+        c.setFont(psfontname='FreeSans', size=16)
+        c.drawCentredString(300, 780, f"{bank['name']}")
+        if is_individual:
+            text = []
+            banks = [dict(item, score=0) for item in db_banks.get_individuals()]
+            for competitive in banks:
+                !!!
 
-def generate_report(chat_id: int = 0, is_individual: bool = True):
+
+def generate_report(is_individual: bool = True):
     graph_rating(is_individual)
     graph_rating_markswebb(is_individual)
     graph_price(is_individual)
-    c = canvas.Canvas(f"analytics_{chat_id}.pdf", pagesize=A4)
+    c = canvas.Canvas(f"analytics_all.pdf", pagesize=A4)
     pdfmetrics.registerFont(TTFont('FreeSans', 'fonts/FreeSans.ttf'))
     c.setFont(psfontname='FreeSans', size=18)
     c.drawCentredString(300, 820, "Полный отчёт по ДБО")
@@ -58,6 +72,20 @@ def generate_report(chat_id: int = 0, is_individual: bool = True):
         text.textLine(line)
     c.drawText(text)
     c.showPage()
+
+    # user rating
+    c.setFont(psfontname='FreeSans', size=16)
+    c.drawCentredString(300, 780, "Пользовательский рейтинг")
+    c.drawImage(f"graph/rating_{'individual' if is_individual else 'entity'}.png", 125, 125, 350, 625)
+    c.showPage()
+
+    # markswebb rating
+    c.setFont(psfontname='FreeSans', size=16)
+    c.drawCentredString(300, 780, "Рейтинг Markswebb")
+    c.drawImage(f"graph/rating_markswebb_{'individual' if is_individual else 'entity'}.png", 125, 125, 350, 625)
+    c.showPage()
+
+    # safety rating
 
     #  card and credit info for individuals
     if is_individual:
@@ -385,12 +413,13 @@ def graph_rating_markswebb(is_individual: bool = True):
 def calculate(chat_id):
     with open(f"personal/personal_{chat_id}.json", mode='r') as handle:
         personal = json.load(handle)  # dictionary
-        if personal['is_individual']:
+        if personal['is_individual']:  # individual
             banks = [dict(item, score=0) for item in db_banks.get_individuals()]
+            safety = [item for item in db_banks.get_safety()]
             if not personal['is_simple']:  # standard
                 avg_rating = sum(bank['rating'] for bank in banks) / len(banks)
                 avg_markswebb = sum(bank['rating markswebb'] for bank in banks) / len(banks)
-                for bank in banks:
+                for bank, safe in zip(banks, safety):
                     for i in range(0, 4):
                         if personal['deposits_investments_both_account'] == i:
                             if bank['deposit investment operations'] >= i or personal[
@@ -436,6 +465,23 @@ def calculate(chat_id):
                             bank['score'] -= 1
                         if bank['rating markswebb'] < avg_markswebb:
                             bank['score'] -= 1
+                    bank['safety'] = safe['value']
+                banks = sorted(banks, key=lambda k: k['safety'], reverse=True)
+                for i, bank in enumerate(banks):
+                    if i < 5:
+                        bank['score'] += 2
+                    if 5 <= i < 10:
+                        bank['score'] += 1
+                banks = sorted(banks, key=lambda k: k['rating markswebb'], reverse=True)
+                for i, bank in enumerate(banks):
+                    if i == 0:
+                        bank['score'] +=1
+                    if i < 3:
+                        bank['score'] += 2
+                    if 3 <= i < 10:
+                        bank['score'] += 1
+                    if i > 15:
+                        bank['score'] -= 2
                 banks = [bank for bank in banks if
                          (bank['min price'] if bank.get('min price') is not None else 0) <= personal['max price']]
                 banks = [bank for bank in banks if
@@ -459,7 +505,8 @@ def calculate(chat_id):
             else:  # individual simple
                 avg_rating = sum(bank['rating'] for bank in banks) / len(banks)
                 avg_markswebb = sum(bank['rating markswebb'] for bank in banks) / len(banks)
-                for bank in banks:
+                safety = [item for item in db_banks.get_safety()]
+                for bank, safe in zip(banks, safety):
                     for i in range(0, 4):
                         if personal['deposits_investments_both_account'] == i:
                             if bank['deposit investment operations'] >= i or personal[
@@ -502,13 +549,25 @@ def calculate(chat_id):
                     if bank['rating'] < avg_rating:
                         bank['score'] -= 1
                     if bank['rating markswebb'] < avg_markswebb:
-                        bank['score'] -= 1
+                        bank['score'] -= 2
+                    bank['safety'] = safe['value']
+                banks = sorted(banks, key=lambda k: k['rating markswebb'], reverse=True)
+                for i, bank in enumerate(banks):
+                    if i == 0:
+                        bank['score'] += 1
+                    if i < 3:
+                        bank['score'] += 2
+                    if 3 <= i < 10:
+                        bank['score'] += 1
+                    if i > 15:
+                        bank['score'] -= 2
                 banks = sorted(banks, key=lambda k: k['score'], reverse=True)
                 top = [bank for bank in banks if bank['score'] == banks[0]['score']]
                 if personal['most_important'] == 'price':
                     top = sorted(top, key=lambda k: k['min price'] if k.get('min price') else 0, reverse=False)
                 elif personal['most_important'] == 'reliability':
                     top = sorted(top, key=lambda k: k['rating'], reverse=True)
+                    top = sorted(top, key=lambda k: k['safety'], reverse=True)
                 elif personal['most_important'] == 'convenience':
                     top = sorted(top, key=lambda k: k['rating markswebb'], reverse=True)
                 message = "Исходя из ваших предпочтений и рейтинга, самые подходящие банки:\n"
@@ -522,10 +581,11 @@ def calculate(chat_id):
 
         else:  # entity
             banks = [dict(item, score=0) for item in db_banks.get_entity()]  # adding a score value to sort
+            safety = [item for item in db_banks.get_safety()]
             if personal['is_simple']:
                 avg_rating = sum(bank['rating'] for bank in banks) / len(banks)
                 avg_markswebb = sum(bank['rating markswebb'] for bank in banks) / len(banks)
-                for bank in banks:
+                for bank, safe in zip(banks, safety):
                     for i in range(0, 4):
                         if personal['notify'] == i:
                             if bank['is SMS email push'] == i:
@@ -559,6 +619,8 @@ def calculate(chat_id):
                     if bank['rating markswebb'] < avg_markswebb:
                         bank['score'] -= 1
 
+                    bank['safety'] = safe['value']
+
                     # minor
                     if bank['is mail to bank']:
                         bank['score'] += 1
@@ -567,6 +629,12 @@ def calculate(chat_id):
                     if bank['partners notification about payments']:
                         bank['score'] += 1
                     if bank['all types of accounts and statements']:
+                        bank['score'] += 1
+                banks = sorted(banks, key=lambda k: k['safety'], reverse=True)
+                for i, bank in enumerate(banks):
+                    if i < 3:
+                        bank['score'] += 2
+                    if 3 <= i < 10:
                         bank['score'] += 1
                 banks = [bank for bank in banks if
                          (bank['max price'] if bank.get('max price') is not None else 0) < personal['max price']]
@@ -587,8 +655,9 @@ def calculate(chat_id):
             else:  # entity standard
                 avg_rating = sum(bank['rating'] for bank in banks) / len(banks)
                 avg_markswebb = sum(bank['rating markswebb'] for bank in banks) / len(banks)
+                safety = [item for item in db_banks.get_safety()]
 
-                for bank in banks:
+                for bank, safe in zip(banks, safety):
                     for i in range(0, 4):
                         if personal['notify'] == i:
                             if bank['is SMS email push'] == i:
@@ -656,16 +725,40 @@ def calculate(chat_id):
                         bank['score'] -= 1
 
                     if bank['rating markswebb'] < avg_markswebb:
-                        bank['score'] -= 1
+                        bank['score'] -= 2
+
+                    if bank['max price'] < personal['min price']:
+                        bank['score'] += 1
+
+                    bank['safety'] = safe['value']
+
+                banks = sorted(banks, key=lambda k: k['safety'], reverse=True)
+                for i, bank in enumerate(banks):
+                    if i < 3:
+                        bank['score'] += 2
+                    if 3 <= i < 10:
+                        bank['score'] += 1
+                banks = sorted(banks, key=lambda k: k['rating markswebb'], reverse=True)
+                for i, bank in enumerate(banks):
+                    if i < 3:
+                        bank['score'] += 2
+                    if 3 <= i < 10:
+                        bank['score'] += 1
+                    if i > 15:
+                        bank['score'] -= 2
 
                 banks = [bank for bank in banks if
                          (bank['min price'] if bank.get('min price') is not None else 0) < personal[
                              'max price']]  # sorting by price
                 banks = sorted(banks, key=lambda k: k['score'], reverse=True)  # sorting by score
+                for bank in banks:
+                    print(f"{bank['name']}: {bank['score']}")
                 top = [bank for bank in banks if bank['score'] == banks[0]['score']]  # only leaders
                 top = sorted(top, key=lambda k: k['rating'], reverse=True)  # sorting by user's rating
                 top = sorted(top, key=lambda k: k['rating markswebb'],
                              reverse=True)  # sorting by overall markswebb's rating
+                for bank in top:
+                    print(f"TOP: {bank['name']}: {bank['score']}")
 
                 message = "Исходя из ваших предпочтений и рейтинга, самые подходящие банки:\n"
                 if len(top) > 3:
@@ -673,15 +766,5 @@ def calculate(chat_id):
                 index = 1
                 for bank in (top_3 if len(top) > 3 else top):
                     message += f"{index}. {bank['name']}\n"
-                    index += 1
-                message += "Общий полученный рейтинг лучших банков:\n"
-                index = 1
-                for bank in top:
-                    message += f"{index}. {bank['name']} - {bank['score']} очков\n"
-                    index += 1
-                message += "Общий рейтинг банков:\n"
-                index = 1
-                for bank in banks:
-                    message += f"{index}. {bank['name']} - {bank['score']} очков\n"
                     index += 1
                 bot.send_message(chat_id=chat_id, text=message)
